@@ -27,14 +27,16 @@ class Draw extends Phaser.Scene {
         this.sidePanel.fillRect(550, 0, 250, 600);
 
         // Title
-        this.instructionText = this.add.text(575, 50, "Scribble Jam", {
+        this.instructionText = this.add.text(575, 50, "Create Your Doodle", {
             fontSize: '24px',
             fill: 0x0000ff,
-            align: "center"
+            wordWrap: {
+                width: 200
+            }
         });
 
         // Instructions
-        this.instructionText = this.add.text(575, 100, instructions, {
+        this.instructionText = this.add.text(575, 125, instructions, {
             fontSize: '16px',
             fill: 0x0000ff,
             wordWrap: {
@@ -43,7 +45,7 @@ class Draw extends Phaser.Scene {
         });
 
         // Play Game button
-        this.playButton = new Button(this, 600, 275, {
+        this.playButton = new Button(this, 600, 300, {
             text: "Start Game",
             bgColor: 0xff0000,
         });

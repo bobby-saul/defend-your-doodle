@@ -9,6 +9,9 @@ import GameOver from "./scenes/GameOver";
 var config = {
     type: Phaser.CANVAS,
     // type: Phaser.AUTO, // CANVAS works smoother on my old mac
+    title: 'Defend Your Doodle',
+    url: 'https://bobby-saul.itch.io/defend-your-doodle',
+    version: '1.0-ALPHA',
     width: 800,
     height: 600,
     physics: {

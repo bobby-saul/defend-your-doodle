@@ -20,7 +20,7 @@ class Start extends Phaser.Scene {
         this.sidePanel.fillRect(100, 100, 600, 400);
 
         // Title
-        this.instructionText = this.add.text(300, 150, "Scribble Jam", {
+        this.instructionText = this.add.text(250, 150, "Defend Your Doodle", {
             fontSize: '24px',
             fill: 0x0000ff,
             align: "center"
