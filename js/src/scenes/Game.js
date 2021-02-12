@@ -8,6 +8,10 @@ class Game extends Phaser.Scene {
 		super('game');
 	}
 
+    init(data) {
+        this.lineWidth = data.lineWidth;
+    }
+
 	preload() {
 		this.cursors = this.input.keyboard.createCursorKeys();
         this.cameras.main.setBackgroundColor('#FFFFFF');
@@ -15,7 +19,7 @@ class Game extends Phaser.Scene {
 
 	create() {
         this.character = this.physics.add.sprite(150, 150, "character");
-        this.character.scale = 1/12;
+        this.character.scale = 1 / this.lineWidth;
 	}
 
 	update() {

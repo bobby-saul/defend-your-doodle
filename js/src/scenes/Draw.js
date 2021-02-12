@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
+import Button from '../objects/Button';
 
 const closestDistance = 8;
 const lineWidth = 10;
+const instructions = "Click and draw your player on the left. When you are satisfied with your creation, click start game to begin.";
 
 class Draw extends Phaser.Scene {
 	constructor() {
@@ -14,25 +16,68 @@ class Draw extends Phaser.Scene {
 	}
 
 	create() {
+        // Sidebar
+        this.sidePanel = this.add.graphics();
+        this.sidePanel.fillStyle(0xeeeeee, 1);
+        this.sidePanel.fillRect(550, 0, 250, 600);
+
+        // Title
+        this.instructionText = this.add.text(575, 50, "Scribble Jam", {
+            fontSize: '24px',
+            fill: 0x0000ff,
+            align: "center"
+        });
+
+        // Instructions
+        this.instructionText = this.add.text(575, 100, instructions, {
+            fontSize: '16px',
+            fill: 0x0000ff,
+            wordWrap: {
+                width: 200
+            }
+        });
+
+        // Play Game button
+        this.playButton = new Button(this, 600, 275, {
+            text: "Start Game",
+            bgColor: 0xff0000,
+        });
+        this.playButton.on("pointerdown", this.playGame, this);
+
+        // Undo button
+        this.undoButton = new Button(this, 600, 550, {
+            text: "Undo",
+            bgColor: 0xff0000,
+        });
+        this.undoButton.on("pointerdown", this.undo, this);
+
+        // Drawing guide image with low alpha
+        this.stickManGuide = this.add.image(275, 300, 'stick-man');
+        this.stickManGuide.alpha = 0.25;
+        this.stickManGuide.scale = 2.5;
+
         // Draw
         this.graphics = this.add.graphics();
         this.lineGoing = false;
         this.lines = [];
-        this.points = [];
         this.line = new Phaser.Curves.Spline([]);
         this.currentPoint = new Phaser.Math.Vector2(-100, -100);
-        // Go to game scene
-        this.input.keyboard.on('keydown-ENTER', this.playGame, this);
 	}
 
+    undo() {
+        this.lines.pop();
+    }
+
     playGame() {
-        this.graphics.generateTexture('character');
-        this.scene.start('game');
+        this.graphics.generateTexture('character', 575);
+        this.scene.start('game', {
+            lineWidth: lineWidth
+        });
         this.scene.stop();   
     }
 
 	update() {
-        if (this.pointer.isDown) {
+        if (this.pointer.isDown && this.pointer.worldX < 550) {
             this.lineGoing = true;
             var x = this.pointer.worldX;
             var y = this.pointer.worldY;
@@ -42,11 +87,7 @@ class Draw extends Phaser.Scene {
             }
         } else if (this.lineGoing) {
             this.lineGoing = false;
-            if (this.line.points.length > 1) {
-                this.lines.push(this.line);
-            } else {
-                this.points.push(this.currentPoint);
-            }
+            this.lines.push(this.line);
             this.line = new Phaser.Curves.Spline([]);
             this.currentPoint = new Phaser.Math.Vector2(-100, -100);
         }
@@ -58,14 +99,13 @@ class Draw extends Phaser.Scene {
         if (this.line.points.length > 0) {
             this.line.draw(this.graphics, this.line.points.length * 2);
         }
-        // Draw points
-        for (var i = 0; i < this.points.length; i++){
-            var p = this.points[i];
-            this.graphics.fillCircle(p.x, p.y, lineWidth);
-        }
-        // Draw lines
+        // Draw old lines
         for (var i = 0; i < this.lines.length; i++){
-            this.lines[i].draw(this.graphics, this.lines[i].points.length * 2);
+            if (this.lines[i].points.length > 1) {
+                this.lines[i].draw(this.graphics, this.lines[i].points.length * 2);
+            } else  if (this.lines[i].points.length > 0) {
+                this.graphics.fillCircle(this.lines[i].points[0].x, this.lines[i].points[0].y, lineWidth / 2);
+            }
         }
     }
 }
