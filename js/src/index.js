@@ -1,8 +1,10 @@
 import Phaser from "phaser";
 import Preload from "./scenes/Preload";
-import Game from "./scenes/Game";
 import Start from "./scenes/Start";
 import Draw from "./scenes/Draw";
+import Day from "./scenes/Day";
+import Night from "./scenes/Night";
+import GameOver from "./scenes/GameOver";
 
 var config = {
     type: Phaser.CANVAS,
@@ -16,7 +18,7 @@ var config = {
             debug: true
         }
     },
-    scene: [Preload, Start, Draw, Game]
+    scene: [Preload, Start, Draw, Day, Night, GameOver]
 };
 
 var game = new Phaser.Game(config);

@@ -4,6 +4,7 @@ import Button from '../objects/Button';
 const closestDistance = 8;
 const lineWidth = 10;
 const instructions = "Click and draw your player on the left. When you are satisfied with your creation, click start game to begin.";
+const timeLimit = 3000;
 
 class Draw extends Phaser.Scene {
 	constructor() {
@@ -16,6 +17,10 @@ class Draw extends Phaser.Scene {
 	}
 
 	create() {
+        // Initially have this off so dot is not accidentally added when clicking start.
+        this.canDraw = false;
+        this.time.delayedCall(300, this.allDraw, [], this);
+
         // Sidebar
         this.sidePanel = this.add.graphics();
         this.sidePanel.fillStyle(0xeeeeee, 1);
@@ -64,48 +69,60 @@ class Draw extends Phaser.Scene {
         this.currentPoint = new Phaser.Math.Vector2(-100, -100);
 	}
 
+    allDraw() {
+        this.canDraw = true;
+    }
+
     undo() {
         this.lines.pop();
     }
 
     playGame() {
-        this.graphics.generateTexture('character', 575);
-        this.scene.start('game', {
-            lineWidth: lineWidth
+        const key = 'character-' + Date.now();
+        this.graphics.generateTexture(key, 575);
+        this.scene.start('day', {
+            lineWidth: lineWidth,
+            health: 100,
+            items: {},
+            day: 1,
+            timeLimit: timeLimit,
+            key: key
         });
         this.scene.stop();   
     }
 
 	update() {
-        if (this.pointer.isDown && this.pointer.worldX < 550) {
-            this.lineGoing = true;
-            var x = this.pointer.worldX;
-            var y = this.pointer.worldY;
-            if (Phaser.Math.Distance.Between(this.currentPoint.x, this.currentPoint.y, x, y) > closestDistance) {
-                this.currentPoint = new Phaser.Math.Vector2(x, y);
-                this.line.addPoint(x, y);
+        if (this.canDraw) {
+            if (this.pointer.isDown && this.pointer.worldX < 550) {
+                this.lineGoing = true;
+                var x = this.pointer.worldX;
+                var y = this.pointer.worldY;
+                if (Phaser.Math.Distance.Between(this.currentPoint.x, this.currentPoint.y, x, y) > closestDistance) {
+                    this.currentPoint = new Phaser.Math.Vector2(x, y);
+                    this.line.addPoint(x, y);
+                }
+            } else if (this.lineGoing) {
+                this.lineGoing = false;
+                this.lines.push(this.line);
+                this.line = new Phaser.Curves.Spline([]);
+                this.currentPoint = new Phaser.Math.Vector2(-100, -100);
             }
-        } else if (this.lineGoing) {
-            this.lineGoing = false;
-            this.lines.push(this.line);
-            this.line = new Phaser.Curves.Spline([]);
-            this.currentPoint = new Phaser.Math.Vector2(-100, -100);
-        }
-        // Reset graphics
-        this.graphics.clear();
-        this.graphics.lineStyle(lineWidth, 0x000000);
-        this.graphics.fillStyle(0x000000, 1);
-        // Draw current line
-        if (this.line.points.length > 0) {
-            this.line.draw(this.graphics, this.line.points.length * 2);
-        }
-        // Draw old lines
-        for (var i = 0; i < this.lines.length; i++){
-            if (this.lines[i].points.length > 1) {
-                this.lines[i].draw(this.graphics, this.lines[i].points.length * 2);
-            } else  if (this.lines[i].points.length > 0) {
-                this.graphics.fillCircle(this.lines[i].points[0].x, this.lines[i].points[0].y, lineWidth / 2);
+            // Reset graphics
+            this.graphics.clear();
+            this.graphics.lineStyle(lineWidth, 0x000000);
+            this.graphics.fillStyle(0x000000, 1);
+            // Draw current line
+            if (this.line.points.length > 0) {
+                this.line.draw(this.graphics, this.line.points.length * 2);
             }
+            // Draw old lines
+            for (var i = 0; i < this.lines.length; i++){
+                if (this.lines[i].points.length > 1) {
+                    this.lines[i].draw(this.graphics, this.lines[i].points.length * 2);
+                } else  if (this.lines[i].points.length > 0) {
+                    this.graphics.fillCircle(this.lines[i].points[0].x, this.lines[i].points[0].y, lineWidth / 2);
+                }
+            }   
         }
     }
 }
