@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Preload from "./scenes/Preload";
 import Game from "./scenes/Game";
+import Start from "./scenes/Start";
 import Draw from "./scenes/Draw";
 
 var config = {
@@ -15,7 +16,7 @@ var config = {
             debug: true
         }
     },
-    scene: [Preload, Draw, Game]
+    scene: [Preload, Start, Draw, Game]
 };
 
 var game = new Phaser.Game(config);

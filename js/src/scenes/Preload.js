@@ -10,7 +10,7 @@ class Preload extends Phaser.Scene {
 	}
 
 	create() {
-		this.scene.start('draw');
+		this.scene.start('start');
 	}
 }
 

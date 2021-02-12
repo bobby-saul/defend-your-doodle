@@ -2,6 +2,12 @@
 
 This game is for the [Scribble Jam](https://itch.io/jam/scribble-jam). The game is using the Phaser game engine.
 
+## Game Play
+
+Start off by drawing your doodle. Then, spend the days collecting items to help you survive the nightly raid by doodle monsters.
+
+See how many days you can survive!
+
 ## Development
 
 For developing run ```npm i``` to install the proper node packages. The scripts to build in the development mode is ```npm run dev``` and to watch is ```npm run watch```. To build in production mode run ```npm run prod```. This project is currently using the latest long term support version of node (14.15.1).
