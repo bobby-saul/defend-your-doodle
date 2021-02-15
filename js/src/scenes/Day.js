@@ -24,9 +24,19 @@ class Day extends Phaser.Scene {
 
 	create() {
         console.log('Starting Day ' + this.day);
-        this.character = this.physics.add.sprite(150, 150, this.key);
+        // Character
+        this.character = this.physics.add.sprite(100, 400, this.key);
         this.character.scale = 1 / this.lineWidth;
+        // Wall
+        this.wall = this.physics.add.sprite(100, 500, 'wall');
+        // Timer
         this.timer = this.time.delayedCall(this.timeLimit, this.startNight, [], this);
+        var timeLeft = Math.floor(this.timeLimit / 1000);
+        this.timerText = this.add.text(400, 25, timeLeft + " seconds left of day " + this.day, {
+            fontSize: '16px',
+            fill: '#000',
+        });
+        this.timerText.x = 400 - (this.timerText.width / 2);
 	}
 
     startNight() {
@@ -72,6 +82,9 @@ class Day extends Phaser.Scene {
         } else {
             this.character.setVelocity(0, 0);
         }
+        // Timer
+        var timeLeft = Math.floor(this.timeLimit / 1000) - Math.floor(this.timer.getProgress() * this.timeLimit / 1000);
+        this.timerText.setText(timeLeft + " seconds left of day " + this.day);
     }
 }
 

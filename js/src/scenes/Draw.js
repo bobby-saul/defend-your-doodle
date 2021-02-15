@@ -4,7 +4,7 @@ import Button from '../objects/Button';
 const closestDistance = 8;
 const lineWidth = 10;
 const instructions = "Click and draw your player on the left. When you are satisfied with your creation, click start game to begin.";
-const timeLimit = 3000;
+const timeLimit = 30 * 1000;
 
 class Draw extends Phaser.Scene {
 	constructor() {
@@ -83,12 +83,12 @@ class Draw extends Phaser.Scene {
         const key = 'character-' + Date.now();
         this.graphics.generateTexture(key, 575);
         this.scene.start('day', {
-            lineWidth: lineWidth,
+            lineWidth: this.lines.length > 0 ? lineWidth : lineWidth / 2.5,
             health: 100,
             items: {},
             day: 1,
             timeLimit: timeLimit,
-            key: key
+            key: this.lines.length > 0 ? key : 'stick-man',
         });
         this.scene.stop();   
     }
