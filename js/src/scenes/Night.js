@@ -21,11 +21,31 @@ class Night extends Phaser.Scene {
 
 	create() {
         console.log('Starting Night ' + this.day);
+        // Wall
+        this.wall = this.physics.add.sprite(100, 500, 'wall');
         // Character
         this.character = this.physics.add.sprite(100, 500, this.key);
         this.character.scale = 1 / this.lineWidth;
-        // Wall
-        this.wall = this.physics.add.sprite(100, 500, 'wall');
+        // Items box
+        this.itemBox = this.add.graphics();
+        this.itemBox.fillStyle(0xeeeeee, 1);
+        this.itemBox.fillRect(710, 535, 90, 65);
+        // bullets
+        this.bulletCount = this.add.text(700, 550, this.items.bullets, {
+            fontSize: '16px',
+            fill: '#000',
+        });
+        this.bulletCount.x = 750 - this.bulletCount.width
+        this.bulletIcon = this.add.image(770, 560, 'bullets');
+        this.bulletIcon.scale = 0.15;
+        // Matterials
+        this.materialsCount = this.add.text(700, 575, this.items.materials, {
+            fontSize: '16px',
+            fill: '#000',
+        });
+        this.materialsCount.x = 750 - this.materialsCount.width
+        this.materialsIcon = this.add.image(770, 585, 'wood');
+        this.materialsIcon.scale = 0.15;
         // Timer
         this.timer = this.time.delayedCall(this.timeLimit, this.startDay, [], this);
         var timeLeft = Math.floor(this.timeLimit / 1000);

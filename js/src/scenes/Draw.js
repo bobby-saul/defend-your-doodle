@@ -85,7 +85,10 @@ class Draw extends Phaser.Scene {
         this.scene.start('day', {
             lineWidth: this.lines.length > 0 ? lineWidth : lineWidth / 2.5,
             health: 100,
-            items: {},
+            items: {
+                bullets: 0,
+                materials: 0,
+            },
             day: 1,
             timeLimit: timeLimit,
             key: this.lines.length > 0 ? key : 'stick-man',
